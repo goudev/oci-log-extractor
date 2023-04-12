@@ -3,9 +3,11 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/oracle/oci-go-sdk/common"
@@ -34,27 +36,34 @@ func writeFile(filename string, logs []loggingsearch.SearchResult) {
 	}
 }
 
+var inputDatainicial string
+var inputDatafinal string
+var compartment string
+
 // Função que obter os logs
 func getLog(request string) {
+
 	if len(os.Args) < 2 {
-		log.Fatal("Você precisa informar a data do log. Exemplo: 2023-01-31")
+		log.Fatal("Você precisa informar a data inicial do log. Exemplo: 2023-01-31T00:00:00")
+	}
+
+	if len(os.Args) < 3 {
+		log.Fatal("Você precisa informar a data do log. Exemplo: 2023-01-31T00:00:00")
 	}
 
 	if len(os.Args) < 3 {
 		log.Fatal("Você precisa informar o OCID do compartimento para buscar os logs.")
 	}
 
-	var inputDate = os.Args[1]
-	var inputCompartiment = os.Args[2]
-	dataInicial, err := time.Parse(time.RFC3339, inputDate+"T00:00:00.600Z")
+	dataInicial, err := time.Parse(time.RFC3339, inputDatainicial+".600Z")
 	if err != nil {
-		log.Fatal("Formato de data inválido. A data deve estar no formato ano-mes-dia, exemplo: 2023-01-31")
+		log.Fatal("Formato de data inválido. A data deve estar no formato 2023-01-31T00:00:00")
 		return
 	}
 
-	dataFinal, err := time.Parse(time.RFC3339, inputDate+"T23:59:59.600Z")
+	dataFinal, err := time.Parse(time.RFC3339, inputDatafinal+".600Z")
 	if err != nil {
-		log.Fatal("Formato de data inválido", err)
+		log.Fatal("Formato de data inválido. A data deve estar no formato 2023-01-31T00:00:00")
 		return
 	}
 
@@ -67,7 +76,7 @@ func getLog(request string) {
 
 	if request != "" {
 		req = loggingsearch.SearchLogsRequest{OpcRequestId: common.String("RIJJ87OXLQBMPBRN6ZWO/OpcRequestIdExample/UniqueRequestId"),
-			SearchLogsDetails: loggingsearch.SearchLogsDetails{SearchQuery: common.String(`search "` + inputCompartiment + `"`),
+			SearchLogsDetails: loggingsearch.SearchLogsDetails{SearchQuery: common.String(`search "` + compartment + `"`),
 				TimeStart:         &common.SDKTime{Time: start},
 				TimeEnd:           &common.SDKTime{Time: end},
 				IsReturnFieldInfo: common.Bool(false)},
@@ -75,7 +84,7 @@ func getLog(request string) {
 			Limit: common.Int(1000)}
 	} else {
 		req = loggingsearch.SearchLogsRequest{OpcRequestId: common.String("RIJJ87OXLQBMPBRN6ZWO/OpcRequestIdExample/UniqueRequestId"),
-			SearchLogsDetails: loggingsearch.SearchLogsDetails{SearchQuery: common.String(`search "` + inputCompartiment + `"`),
+			SearchLogsDetails: loggingsearch.SearchLogsDetails{SearchQuery: common.String(`search "` + compartment + `"`),
 				TimeStart:         &common.SDKTime{Time: start},
 				TimeEnd:           &common.SDKTime{Time: end},
 				IsReturnFieldInfo: common.Bool(false)},
@@ -83,7 +92,7 @@ func getLog(request string) {
 	}
 	resp, err := client.SearchLogs(context.Background(), req)
 	helpers.FatalIfError(err)
-	writeFile("log-"+inputDate+".jsonl", resp.SearchResponse.Results)
+	writeFile("log-"+strings.Replace(inputDatainicial, ":", "-", -1)+"_"+strings.Replace(inputDatafinal, ":", "-", -1)+".jsonl", resp.SearchResponse.Results)
 	if resp.OpcNextPage == nil {
 		fmt.Println("Concluída a geração de log")
 	} else {
@@ -99,5 +108,9 @@ func getLog(request string) {
 }
 
 func main() {
+	flag.StringVar(&inputDatainicial, "data-inicial", "", "A data inicial no formato 2023-01-31T00:00:00")
+	flag.StringVar(&inputDatafinal, "data-final", "", "A data final no formato 2023-01-31T00:00:00")
+	flag.StringVar(&compartment, "compartment", "", "O ocid do compartimento")
+	flag.Parse()
 	getLog("")
 }
