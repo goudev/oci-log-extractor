@@ -1,39 +1,39 @@
 # OCILogExtractor
 
-OCILogExtractor é uma ferramenta em linha de comando (CLI) que extrai logs do Oracle Cloud Infrastructure (OCI) a partir de uma data inicial até uma data final. Essa ferramenta é útil para analisar logs em busca de problemas ou para monitoramento de atividades em sua conta da OCI.
+OCILogExtractor is a command-line tool (CLI) that extracts logs from Oracle Cloud Infrastructure (OCI) from a start date to an end date. This tool is useful for analyzing logs for issues or for monitoring activities in your OCI account.
 
-## Requisitos
+## Requirements
 
-- Go 1.16 ou superior instalado na máquina.
-- Conta da OCI com acesso ao serviço de logs configurada e com cli instalado. Para saber como configurar e instalar o cli acesse: 
-https://docs.oracle.com/pt-br/iaas/Content/API/SDKDocs/cliinstall.htm
+* Go 1.16 or higher installed on the machine.
+* An OCI account with access to the logs service configured and with CLI installed. To learn how to configure and install the CLI, please visit: https://docs.oracle.com/pt-br/iaas/Content/API/SDKDocs/cliinstall.htm
 
-## Instalação
+## Installation
 
-1. Clone o repositório em sua máquina local:
+1. Clone the repository to your local machine:
 `https://github.com/goudev/oci-log-extractor.git`
 
 
-2. Entre na pasta do projeto:
+2. Navigate to the project folder:
 `cd oci-log-extractor`
 
-3. Compile os executáveis com o seguinte comando:
+3. Compile the executables with the following command:
 `make all`
 
-## Como executar? 
-Para usar o OCILogExtractor, execute o seguinte comando:
+## How to execute?
+To use OCILogExtractor, run the following command:
 
-`./OCILogExtractor-<os>-<arch> --data-inicial=(formato 2023-01-31T00:00:00) --data-final=(formato 2023-01-31T00:00:00) --compartment=(ocid1.compartment.oc1..xxxxxxxxxxxxxxx)`
-
-<br>
-Substitua `(2023-01-31T00:00:00)` pela data e hora inicial desejada e `(2023-01-31T00:00:00)` pela data e hora final desejada. Substitua `(ocid1.compartment.oc1..xxxxxxxxxxxxxxx)` pelo ID do compartment que você deseja extrair os logs.
+`./OCILogExtractor-<os>-<arch> -data-inicial=(formato 2023-01-31T00:00:00) -data-final=(formato 2023-01-31T00:00:00) -compartment=(ocid1.compartment.oc1..xxxxxxxxxxxxxxx)`
 
 <br>
-Os logs extraídos serão salvos em um arquivo chamado `log-2023-01-31T00-00-00_2023-01-31T00-00-00.jsonl` no diretório atual.
+Replace `(2023-01-31T00:00:00)` with the desired start date and time, and `(2023-01-31T00:00:00)` with the desired end date and time. <br>
+Replace `(ocid1.compartment.oc1..xxxxxxxxxxxxxxx)` with the ID of the compartment from which you want to extract the logs.
+
+<br>
+The extracted logs will be saved to a file named *log-2023-01-31T00-00-00_2023-01-31T00-00-00.jsonl* in the current directory.
 
 <br>
 
-## Executáveis para download
+## Downloadable executables
 
 * [Linux - arm64](https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/gr1ezkxpdb2l/b/bucket-20230411-2326/o/OciLogExtractor-linux-arm64)
 * [Linux - x86_64](https://objectstorage.sa-saopaulo-1.oraclecloud.com/n/gr1ezkxpdb2l/b/bucket-20230411-2326/o/OciLogExtractor-linux-x86_64)
