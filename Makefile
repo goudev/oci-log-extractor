@@ -6,7 +6,7 @@ BUILD=go build
 DIST=dist
 
 # Nome do arquivo de saída
-NAME=Think-OciLogExtractor
+NAME=OciLogExtractor
 
 # Compilação para Windows 64 bits
 windows:
