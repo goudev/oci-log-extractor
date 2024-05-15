@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: oci-log-extractor
+  annotations:
+    github.com/project-slug: goudev/oci-log-extractor
+spec:
+  type: other
+  lifecycle: unknown
